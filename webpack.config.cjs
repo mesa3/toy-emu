@@ -51,5 +51,8 @@ module.exports = [{
     filename: 'dual-sr6.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  devServer: {
+    static: '.',
+  },
   ...base
 }];

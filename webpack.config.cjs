@@ -44,4 +44,15 @@ module.exports = [{
     },
   },
   ...base
+}, {
+  entry: './dual-sr6.js',
+  mode: 'production',
+  output: {
+    filename: 'dual-sr6.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  devServer: {
+    static: '.',
+  },
+  ...base
 }];

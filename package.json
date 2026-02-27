@@ -11,7 +11,8 @@
     "url": "git+https://github.com/ayvasoftware/osr-emu.git"
   },
   "scripts": {
-    "release": "npx webpack"
+    "release": "npx webpack",
+    "dev": "webpack serve --open dual-sr6.html"
   },
   "keywords": [
     "osr",
@@ -29,7 +30,8 @@
   "homepage": "https://github.com/ayvasoftware/osr-emu#readme",
   "devDependencies": {
     "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.15.2"
   },
   "dependencies": {
     "three": "^0.127.0"

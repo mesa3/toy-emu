@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dual SR6 Controller</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+      background-color: #222;
+      color: white;
+    }
+    #canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    .controls-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .device-controls {
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .device-controls h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .control-row label {
+      width: 30px;
+      font-size: 0.9em;
+    }
+    .control-row input {
+      flex: 1;
+    }
+    button {
+      background-color: #3f5173;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #4f6183;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas"></div>
+
+  <div class="controls-container">
+    <div class="device-controls" id="device-0">
+      <h3>Device 1 (Left)</h3>
+      <button onclick="app.connectDevice(0)">Connect Serial</button>
+      <div class="control-row">
+        <label>X</label>
+        <input type="range" min="-500" max="500" value="-150" oninput="updateTransform(0)">
+      </div>
+      <div class="control-row">
+        <label>Y</label>
+        <input type="range" min="-500" max="500" value="0" oninput="updateTransform(0)">
+      </div>
+      <div class="control-row">
+        <label>Z</label>
+        <input type="range" min="-200" max="200" value="0" oninput="updateTransform(0)">
+      </div>
+      <div class="control-row">
+        <label>Rot</label>
+        <input type="range" min="-3.14" max="3.14" step="0.01" value="0" oninput="updateTransform(0)">
+      </div>
+    </div>
+
+    <div class="device-controls" id="device-1">
+      <h3>Device 2 (Right)</h3>
+      <button onclick="app.connectDevice(1)">Connect Serial</button>
+      <div class="control-row">
+        <label>X</label>
+        <input type="range" min="-500" max="500" value="150" oninput="updateTransform(1)">
+      </div>
+      <div class="control-row">
+        <label>Y</label>
+        <input type="range" min="-500" max="500" value="0" oninput="updateTransform(1)">
+      </div>
+      <div class="control-row">
+        <label>Z</label>
+        <input type="range" min="-200" max="200" value="0" oninput="updateTransform(1)">
+      </div>
+      <div class="control-row">
+        <label>Rot</label>
+        <input type="range" min="-3.14" max="3.14" step="0.01" value="0" oninput="updateTransform(1)">
+      </div>
+    </div>
+  </div>
+
+  <script src="dist/dual-sr6.js"></script>
+  <script>
+    let app;
+    window.onload = () => {
+      app = new DualSR6App('canvas');
+    };
+
+    function updateTransform(deviceIndex) {
+      const container = document.getElementById('device-' + deviceIndex);
+      const inputs = container.querySelectorAll('input[type="range"]');
+      const x = parseFloat(inputs[0].value);
+      const y = parseFloat(inputs[1].value);
+      const z = parseFloat(inputs[2].value);
+      const rot = parseFloat(inputs[3].value);
+
+      app.setDeviceTransform(deviceIndex, x, y, z, rot);
+    }
+  </script>
+</body>
+</html>

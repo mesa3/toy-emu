@@ -60,12 +60,15 @@ class DeviceController {
   }
 
   update() {
-    this.#osrModel.preRender(this.axes, this.#scale);
+    // Ensure the modelGroup matrix is updated before passing it to preRender
+    this.#modelGroup.updateMatrixWorld();
+    this.#osrModel.preRender(this.axes, this.#scale, this.#modelGroup);
   }
 
   setTransform(x, y, z, rotation) {
     this.#modelGroup.position.set(x, y, z);
     this.#modelGroup.rotation.y = rotation;
+    this.#modelGroup.updateMatrixWorld(); // Update immediately
   }
 
   async connect() {

@@ -89,10 +89,10 @@
   <div class="controls-container">
     <div class="device-controls" id="device-0">
       <h3>Device 1 (Left)</h3>
-      <button onclick="app.connectDevice(0)">Connect Serial</button>
+      <button id="btn-serial-0" onclick="connectSerial(0)">Connect Serial</button>
       <div class="ws-row">
         <input type="text" id="ws-url-0" value="ws://localhost:8080">
-        <button onclick="connectWS(0)">Connect WS</button>
+        <button id="btn-ws-0" onclick="connectWS(0)">Connect WS</button>
       </div>
       <div class="control-row">
         <label>X</label>
@@ -114,10 +114,10 @@
 
     <div class="device-controls" id="device-1">
       <h3>Device 2 (Right)</h3>
-      <button onclick="app.connectDevice(1)">Connect Serial</button>
+      <button id="btn-serial-1" onclick="connectSerial(1)">Connect Serial</button>
       <div class="ws-row">
         <input type="text" id="ws-url-1" value="ws://localhost:8081">
-        <button onclick="connectWS(1)">Connect WS</button>
+        <button id="btn-ws-1" onclick="connectWS(1)">Connect WS</button>
       </div>
       <div class="control-row">
         <label>X</label>
@@ -156,10 +156,36 @@
       app.setDeviceTransform(deviceIndex, x, y, z, rot);
     }
 
-    function connectWS(deviceIndex) {
+    async function connectSerial(deviceIndex) {
+      if (app) {
+        try {
+          await app.connectDevice(deviceIndex);
+          alert('Device ' + (deviceIndex + 1) + ' 连接串口成功');
+          const btn = document.getElementById('btn-serial-' + deviceIndex);
+          if (btn) {
+            btn.textContent = 'Serial Connected';
+            btn.style.backgroundColor = '#4CAF50';
+          }
+        } catch (error) {
+          alert('Device ' + (deviceIndex + 1) + ' 连接串口失败: ' + error.message);
+        }
+      }
+    }
+
+    async function connectWS(deviceIndex) {
       const urlInput = document.getElementById('ws-url-' + deviceIndex);
       if (app && urlInput) {
-        app.connectWebSocket(deviceIndex, urlInput.value);
+        try {
+          await app.connectWebSocket(deviceIndex, urlInput.value);
+          alert('Device ' + (deviceIndex + 1) + ' 连接ws成功');
+          const btn = document.getElementById('btn-ws-' + deviceIndex);
+          if (btn) {
+            btn.textContent = 'WS Connected';
+            btn.style.backgroundColor = '#4CAF50';
+          }
+        } catch (error) {
+          alert('Device ' + (deviceIndex + 1) + ' 连接ws失败');
+        }
       }
     }
   </script>

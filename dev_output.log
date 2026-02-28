@@ -3,15 +3,15 @@
 > webpack serve --open dual-sr6.html
 
 <i> [webpack-dev-server] Project is running at:
-<i> [webpack-dev-server] Loopback: http://localhost:8081/
-<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.0.2:8081/
+<i> [webpack-dev-server] Loopback: http://localhost:8080/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.0.2:8080/
 <i> [webpack-dev-server] Content not from webpack is served from '.' directory
 asset osr-emu.dist.module.min.js 7.91 MiB [emitted] [javascript module] [minimized] [big] (name: main)
 orphan modules 8.34 MiB [orphan] 48 modules
 runtime modules 26.8 KiB 11 modules
 cacheable modules 8.41 MiB
   modules by path ./node_modules/webpack-dev-server/client/ 105 KiB
-    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8081&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
+    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
     ./node_modules/webpack-dev-server/client/utils/log.js 1.15 KiB [built] [code generated]
     + 2 modules
   modules by path ./node_modules/webpack/hot/*.js 4.3 KiB
@@ -22,14 +22,14 @@ cacheable modules 8.41 MiB
   ./osr-emu.js + 32 modules 8.28 MiB [built] [code generated]
   ./node_modules/ansi-html-community/index.js 4.16 KiB [built] [code generated]
   ./node_modules/events/events.js 14.5 KiB [built] [code generated]
-webpack 5.74.0 compiled successfully in 14113 ms
+webpack 5.74.0 compiled successfully in 16692 ms
 
 asset osr-emu.dist.min.js 7.91 MiB [emitted] [minimized] [big] (name: main)
 orphan modules 8.34 MiB [orphan] 48 modules
 runtime modules 27.3 KiB 12 modules
 cacheable modules 8.41 MiB
   modules by path ./node_modules/webpack-dev-server/client/ 105 KiB
-    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8081&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
+    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
     ./node_modules/webpack-dev-server/client/utils/log.js 1.15 KiB [built] [code generated]
     + 2 modules
   modules by path ./node_modules/webpack/hot/*.js 4.3 KiB
@@ -40,14 +40,14 @@ cacheable modules 8.41 MiB
   ./osr-emu.js + 32 modules 8.28 MiB [built] [code generated]
   ./node_modules/ansi-html-community/index.js 4.16 KiB [built] [code generated]
   ./node_modules/events/events.js 14.5 KiB [built] [code generated]
-webpack 5.74.0 compiled successfully in 17609 ms
+webpack 5.74.0 compiled successfully in 14693 ms
 
 asset dual-sr6.js 2.87 MiB [emitted] [minimized] [big] (name: main)
 orphan modules 3.45 MiB [orphan] 35 modules
 runtime modules 27.3 KiB 12 modules
 cacheable modules 3.52 MiB
   modules by path ./node_modules/webpack-dev-server/client/ 105 KiB
-    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8081&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
+    ./node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true + 16 modules 76 KiB [built] [code generated]
     ./node_modules/webpack-dev-server/client/utils/log.js 1.15 KiB [built] [code generated]
     + 2 modules
   modules by path ./node_modules/webpack/hot/*.js 4.3 KiB
@@ -58,5 +58,5 @@ cacheable modules 3.52 MiB
   ./dual-sr6.js + 19 modules 3.4 MiB [built] [code generated]
   ./node_modules/ansi-html-community/index.js 4.16 KiB [built] [code generated]
   ./node_modules/events/events.js 14.5 KiB [built] [code generated]
-webpack 5.74.0 compiled successfully in 13041 ms
+webpack 5.74.0 compiled successfully in 13353 ms
 <i> [webpack-dev-server] Gracefully shutting down. To force exit, press ^C again. Please wait...

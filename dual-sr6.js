@@ -75,28 +75,35 @@ class DeviceController {
 
 
   connectWebSocket(url) {
-    if (this.#websocket) {
-      this.#websocket.close();
-    }
-    this.#websocket = new WebSocket(url);
-    this.#websocket.onopen = () => {
-      console.log(`WebSocket connected to ${url}`);
-    };
-    this.#websocket.onmessage = (event) => {
-      if (typeof event.data === 'string') {
-        this.write(event.data);
-      } else if (event.data instanceof Blob) {
-        // If the server sends binary data instead of text
-        event.data.text().then(text => this.write(text));
+    return new Promise((resolve, reject) => {
+      if (this.#websocket) {
+        this.#websocket.close();
       }
-    };
-    this.#websocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-    this.#websocket.onclose = () => {
-      console.log('WebSocket connection closed');
-      this.#websocket = null;
-    };
+      this.#websocket = new WebSocket(url);
+
+      this.#websocket.onopen = () => {
+        console.log(`WebSocket connected to ${url}`);
+        resolve();
+      };
+
+      this.#websocket.onmessage = (event) => {
+        if (typeof event.data === 'string') {
+          this.write(event.data);
+        } else if (event.data instanceof Blob) {
+          event.data.text().then(text => this.write(text));
+        }
+      };
+
+      this.#websocket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        reject(error);
+      };
+
+      this.#websocket.onclose = () => {
+        console.log('WebSocket connection closed');
+        this.#websocket = null;
+      };
+    });
   }
 
   async connect() {
@@ -114,11 +121,14 @@ class DeviceController {
         this.#writer = textEncoder.writable.getWriter();
 
         this.#readLoop();
+        return Promise.resolve();
       } catch (err) {
         console.error('There was an error opening the serial port:', err);
+        return Promise.reject(err);
       }
     } else {
       console.error('Web Serial API not supported.');
+      return Promise.reject(new Error('Web Serial API not supported.'));
     }
   }
 
@@ -262,14 +272,16 @@ class DualSR6App {
 
   connectWebSocket(index, url) {
     if (this.#devices[index]) {
-      this.#devices[index].connectWebSocket(url);
+      return this.#devices[index].connectWebSocket(url);
     }
+    return Promise.reject(new Error('Device not found'));
   }
 
   connectDevice(index) {
     if (this.#devices[index]) {
-      this.#devices[index].connect();
+      return this.#devices[index].connect();
     }
+    return Promise.reject(new Error('Device not found'));
   }
 
   setDeviceTransform(index, x, y, z, rotation) {

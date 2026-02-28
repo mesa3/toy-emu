@@ -48,8 +48,17 @@
       width: 30px;
       font-size: 0.9em;
     }
-    .control-row input {
+    .control-row input[type="range"] {
       flex: 1;
+    }
+    .control-row input[type="text"] {
+      flex: 1;
+      padding: 4px;
+      margin-right: 5px;
+      background: #333;
+      border: 1px solid #555;
+      color: white;
+      border-radius: 4px;
     }
     button {
       background-color: #3f5173;
@@ -64,6 +73,14 @@
     button:hover {
       background-color: #4f6183;
     }
+    .ws-row {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .ws-row button {
+      width: auto;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +90,10 @@
     <div class="device-controls" id="device-0">
       <h3>Device 1 (Left)</h3>
       <button onclick="app.connectDevice(0)">Connect Serial</button>
+      <div class="ws-row">
+        <input type="text" id="ws-url-0" value="ws://localhost:8080">
+        <button onclick="connectWS(0)">Connect WS</button>
+      </div>
       <div class="control-row">
         <label>X</label>
         <input type="range" min="-500" max="500" value="-150" oninput="updateTransform(0)">
@@ -94,6 +115,10 @@
     <div class="device-controls" id="device-1">
       <h3>Device 2 (Right)</h3>
       <button onclick="app.connectDevice(1)">Connect Serial</button>
+      <div class="ws-row">
+        <input type="text" id="ws-url-1" value="ws://localhost:8081">
+        <button onclick="connectWS(1)">Connect WS</button>
+      </div>
       <div class="control-row">
         <label>X</label>
         <input type="range" min="-500" max="500" value="150" oninput="updateTransform(1)">
@@ -129,6 +154,13 @@
       const rot = parseFloat(inputs[3].value);
 
       app.setDeviceTransform(deviceIndex, x, y, z, rot);
+    }
+
+    function connectWS(deviceIndex) {
+      const urlInput = document.getElementById('ws-url-' + deviceIndex);
+      if (app && urlInput) {
+        app.connectWebSocket(deviceIndex, urlInput.value);
+      }
     }
   </script>
 </body>

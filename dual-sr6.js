@@ -98,7 +98,8 @@ class DeviceController {
     const footModel = createFootModel();
     // Position offset to fit inside the cup nicely.
     // The receiver's center pivot is approximately at the center of the cup.
-    footModel.position.set(0, -20, 0);
+    footModel.position.set(0, 0, 0);
+    footModel.scale.set(1.5, 1.5, 1.5); // Make it larger to ensure visibility
     objects.receiver.add(footModel);
 
     for (const object of Object.values(objects)) {

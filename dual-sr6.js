@@ -72,6 +72,8 @@ class DeviceController {
   #port;
   #reader;
   #readableStreamClosed;
+  #footModel;
+  #receiver;
 
   constructor(scene) {
     this.#axisEmulator = {
@@ -94,13 +96,10 @@ class DeviceController {
     const { objects, orientation } = this.#osrModel.load();
     const osrGroup = new THREE.Group();
 
-    // Create and attach foot model to receiver
-    const footModel = createFootModel();
-    // Position offset to fit inside the cup nicely.
-    // The receiver's center pivot is approximately at the center of the cup.
-    footModel.position.set(0, 0, 0);
-    footModel.scale.set(1.5, 1.5, 1.5); // Make it larger to ensure visibility
-    objects.receiver.add(footModel);
+    this.#receiver = objects.receiver;
+    this.#footModel = createFootModel();
+    this.#footModel.scale.set(1.5, 1.5, 1.5);
+    osrGroup.add(this.#footModel); // Add to osrGroup alongside other objects so it's guaranteed to be in the scene.
 
     for (const object of Object.values(objects)) {
       forEachMesh(object, (mesh) => {
@@ -127,6 +126,13 @@ class DeviceController {
     // Ensure the modelGroup matrix is updated before passing it to preRender
     this.#modelGroup.updateMatrixWorld();
     this.#osrModel.preRender(this.axes, this.#scale, this.#modelGroup);
+
+    // Sync foot model manually with receiver
+    if (this.#footModel && this.#receiver) {
+      this.#footModel.position.copy(this.#receiver.position);
+      // The receiver also has a quaternion from IK calculations
+      this.#footModel.quaternion.copy(this.#receiver.quaternion);
+    }
   }
 
   setTransform(x, y, z, rotation) {

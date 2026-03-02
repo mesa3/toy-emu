@@ -16,6 +16,8 @@ class DeviceController {
   #port;
   #reader;
   #readableStreamClosed;
+  #writer;
+  #websocket;
 
   constructor(scene) {
     this.#axisEmulator = {
@@ -71,6 +73,39 @@ class DeviceController {
     this.#modelGroup.updateMatrixWorld(); // Update immediately
   }
 
+
+  connectWebSocket(url) {
+    return new Promise((resolve, reject) => {
+      if (this.#websocket) {
+        this.#websocket.close();
+      }
+      this.#websocket = new WebSocket(url);
+
+      this.#websocket.onopen = () => {
+        console.log(`WebSocket connected to ${url}`);
+        resolve();
+      };
+
+      this.#websocket.onmessage = (event) => {
+        if (typeof event.data === 'string') {
+          this.write(event.data);
+        } else if (event.data instanceof Blob) {
+          event.data.text().then(text => this.write(text));
+        }
+      };
+
+      this.#websocket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        reject(error);
+      };
+
+      this.#websocket.onclose = () => {
+        console.log('WebSocket connection closed');
+        this.#websocket = null;
+      };
+    });
+  }
+
   async connect() {
     if ('serial' in navigator) {
       try {
@@ -81,12 +116,19 @@ class DeviceController {
         this.#readableStreamClosed = this.#port.readable.pipeTo(textDecoder.writable);
         this.#reader = textDecoder.readable.getReader();
 
+        const textEncoder = new TextEncoderStream();
+        const writableStreamClosed = textEncoder.readable.pipeTo(this.#port.writable);
+        this.#writer = textEncoder.writable.getWriter();
+
         this.#readLoop();
+        return Promise.resolve();
       } catch (err) {
         console.error('There was an error opening the serial port:', err);
+        return Promise.reject(err);
       }
     } else {
       console.error('Web Serial API not supported.');
+      return Promise.reject(new Error('Web Serial API not supported.'));
     }
   }
 
@@ -112,6 +154,12 @@ class DeviceController {
         this.#executeCommand(this.#buffer);
         this.#buffer = '';
       }
+    }
+
+    if (this.#writer) {
+      this.#writer.write(input).catch(err => {
+        console.error('Error writing to serial port:', err);
+      });
     }
   }
 
@@ -222,10 +270,18 @@ class DualSR6App {
     this.#renderer.render(this.#scene, this.#camera);
   }
 
+  connectWebSocket(index, url) {
+    if (this.#devices[index]) {
+      return this.#devices[index].connectWebSocket(url);
+    }
+    return Promise.reject(new Error('Device not found'));
+  }
+
   connectDevice(index) {
     if (this.#devices[index]) {
-      this.#devices[index].connect();
+      return this.#devices[index].connect();
     }
+    return Promise.reject(new Error('Device not found'));
   }
 
   setDeviceTransform(index, x, y, z, rotation) {

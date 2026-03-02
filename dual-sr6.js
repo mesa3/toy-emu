@@ -7,6 +7,62 @@ import SR6Model from './lib/models/sr6/sr6.js';
 const COMMAND_REGEX = /^(L0|L1|L2|R0|R1|R2)([0-9]+)$/;
 const COMMAND_EXTENSION_REGEX = /^(L0|L1|L2|R0|R1|R2)([0-9]+)(I|S)([0-9]+)$/;
 
+function createFootModel() {
+  const footGroup = new THREE.Group();
+
+  const skinMaterial = new THREE.MeshPhongMaterial({ color: 0xffd1b3 }); // Skin tone
+
+  // Heel
+  const heelGeometry = new THREE.SphereGeometry(25, 32, 32);
+  const heel = new THREE.Mesh(heelGeometry, skinMaterial);
+  heel.position.set(0, 0, 0);
+  heel.castShadow = true;
+  heel.receiveShadow = true;
+  footGroup.add(heel);
+
+  // Midfoot / arch
+  const midFootGeometry = new THREE.CylinderGeometry(20, 25, 60, 32);
+  const midFoot = new THREE.Mesh(midFootGeometry, skinMaterial);
+  midFoot.rotation.x = Math.PI / 2;
+  midFoot.position.set(0, 5, 30);
+  midFoot.castShadow = true;
+  midFoot.receiveShadow = true;
+  footGroup.add(midFoot);
+
+  // Ball of foot
+  const ballGeometry = new THREE.SphereGeometry(22, 32, 32);
+  const ball = new THREE.Mesh(ballGeometry, skinMaterial);
+  ball.position.set(0, 5, 60);
+  ball.castShadow = true;
+  ball.receiveShadow = true;
+  footGroup.add(ball);
+
+  // Toes (simplified as a single block for now)
+  const toesGeometry = new THREE.BoxGeometry(40, 15, 20);
+  const toes = new THREE.Mesh(toesGeometry, skinMaterial);
+  toes.position.set(0, 5, 75);
+  toes.castShadow = true;
+  toes.receiveShadow = true;
+
+  // Round the corners of the toes block slightly using a cylinder
+  const toeTipGeometry = new THREE.CylinderGeometry(7.5, 7.5, 40, 32);
+  const toeTip = new THREE.Mesh(toeTipGeometry, skinMaterial);
+  toeTip.rotation.z = Math.PI / 2;
+  toeTip.position.set(0, 5, 85);
+  toeTip.castShadow = true;
+  toeTip.receiveShadow = true;
+
+  footGroup.add(toes);
+  footGroup.add(toeTip);
+
+  // Rotate so toes point up and heel goes into the cup
+  footGroup.rotation.x = -Math.PI / 2;
+
+  // The ankle is at 0,0,0, which will go directly into the receiver pivot
+
+  return footGroup;
+}
+
 class DeviceController {
   #buffer = '';
   #axisEmulator;
@@ -39,6 +95,14 @@ class DeviceController {
 
     const { objects, orientation } = this.#osrModel.load();
     const osrGroup = new THREE.Group();
+
+    // Create and attach foot model to receiver
+    const footModel = createFootModel();
+    // Position offset to fit inside the cup nicely.
+    // The receiver's center pivot is approximately at the center of the cup.
+    footModel.position.set(0, 0, 0);
+    footModel.scale.set(1.5, 1.5, 1.5); // Make it larger to ensure visibility
+    objects.receiver.add(footModel);
 
     for (const object of Object.values(objects)) {
       forEachMesh(object, (mesh) => {

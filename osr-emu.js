@@ -112,13 +112,10 @@ class OSREmulator {
       return;
     }
 
-    for (let byte of input) {
-      this.#buffer += byte;
-
-      if (byte === '\n') {
-        this.#executeCommand(this.#buffer);
-        this.#buffer = '';
-      }
+    const lines = (this.#buffer + input).split('\n');
+    this.#buffer = lines.pop();
+    for (const line of lines) {
+      this.#executeCommand(line + '\n');
     }
   }
 

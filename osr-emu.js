@@ -126,7 +126,7 @@ class OSREmulator {
     this.#resizeObserver.unobserve(this.#element);
     window.removeEventListener('resize', this.#boundResizeListener);
     window.cancelAnimationFrame(this.#animationFrameRequestId);
-    this.#element.innerHTML = '';
+    this.#element.replaceChildren();
     this.renderer.dispose();
     this.renderer.forceContextLoss();
   }
@@ -181,7 +181,7 @@ class OSREmulator {
     this.#setupLighting(scene);
     this.#loadModel(scene);
 
-    this.#element.innerHTML = '';
+    this.#element.replaceChildren();
     this.#element.appendChild(renderer.domElement);
 
     this.#buffer = '';

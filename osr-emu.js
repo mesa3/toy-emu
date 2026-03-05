@@ -132,18 +132,17 @@ class OSREmulator {
   }
 
   #executeCommand (buffer) {
-    const commands = buffer.trim().split(/\s/).map(c => c.trim());
+    const commands = buffer.match(/\S+/g) || [];
     const parseValue = value => Number(value.substring(0, 4).padEnd(4, '0'));
 
     for (const command of commands) {
-      if (COMMAND_REGEX.test(command)) {
-        const match = COMMAND_REGEX.exec(command);
+      let match;
+      if ((match = COMMAND_REGEX.exec(command))) {
         const axis = match[1];
         const value = match[2];
 
         this.#axisEmulator[axis].set(parseValue(value));
-      } else if (COMMAND_EXTENSION_REGEX.test(command)) {
-        const match = COMMAND_EXTENSION_REGEX.exec(command);
+      } else if ((match = COMMAND_EXTENSION_REGEX.exec(command))) {
         const axis = match[1];
         const value = match[2];
         const ext = match[3];

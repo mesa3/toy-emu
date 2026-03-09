@@ -81,10 +81,43 @@
       width: auto;
       margin-bottom: 0;
     }
+    #toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      padding: 12px 20px;
+      border-radius: 4px;
+      color: white;
+      font-size: 0.9em;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+      min-width: 200px;
+    }
+    .toast-success {
+      background-color: #4CAF50;
+    }
+    .toast-error {
+      background-color: #f44336;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
+    }
   </style>
 </head>
 <body>
   <div id="canvas"></div>
+  <div id="toast-container"></div>
 
   <div class="controls-container">
     <div class="device-controls" id="device-0">
@@ -145,6 +178,17 @@
       app = new DualSR6App('canvas');
     };
 
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
     function updateTransform(deviceIndex) {
       const container = document.getElementById('device-' + deviceIndex);
       const inputs = container.querySelectorAll('input[type="range"]');
@@ -160,14 +204,14 @@
       if (app) {
         try {
           await app.connectDevice(deviceIndex);
-          alert('Device ' + (deviceIndex + 1) + ' 连接串口成功');
+          showToast('Device ' + (deviceIndex + 1) + ' 连接串口成功');
           const btn = document.getElementById('btn-serial-' + deviceIndex);
           if (btn) {
             btn.textContent = 'Serial Connected';
             btn.style.backgroundColor = '#4CAF50';
           }
         } catch (error) {
-          alert('Device ' + (deviceIndex + 1) + ' 连接串口失败: ' + error.message);
+          showToast('Device ' + (deviceIndex + 1) + ' 连接串口失败', 'error');
         }
       }
     }
@@ -177,14 +221,14 @@
       if (app && urlInput) {
         try {
           await app.connectWebSocket(deviceIndex, urlInput.value);
-          alert('Device ' + (deviceIndex + 1) + ' 连接ws成功');
+          showToast('Device ' + (deviceIndex + 1) + ' 连接ws成功');
           const btn = document.getElementById('btn-ws-' + deviceIndex);
           if (btn) {
             btn.textContent = 'WS Connected';
             btn.style.backgroundColor = '#4CAF50';
           }
         } catch (error) {
-          alert('Device ' + (deviceIndex + 1) + ' 连接ws失败');
+          showToast('Device ' + (deviceIndex + 1) + ' 连接ws失败', 'error');
         }
       }
     }

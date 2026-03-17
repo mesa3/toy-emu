@@ -311,7 +311,4 @@ class OSREmulator {
   }
 }
 
-// Allow importing as named or default.
-// TODO: Remove default export once updated elsewhere.
-export default OSREmulator;
 export { OSREmulator };

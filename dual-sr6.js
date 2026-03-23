@@ -10,6 +10,7 @@ const COMMAND_EXTENSION_REGEX = /^(L0|L1|L2|R0|R1|R2)([0-9]+)(I|S)([0-9]+)$/;
 class DeviceController {
   #buffer = '';
   #axisEmulator;
+  #axisKeys;
   #scale;
   #osrModel;
   #modelGroup;
@@ -28,6 +29,7 @@ class DeviceController {
       'R1': new Axis('R1'), // Roll
       'R2': new Axis('R2'), // Pitch
     };
+    this.#axisKeys = Object.keys(this.#axisEmulator);
 
     this.#scale = {
       'L0': 1, 'L1': 1, 'L2': 1,
@@ -55,9 +57,10 @@ class DeviceController {
 
   get axes() {
     const result = {};
-    Object.keys(this.#axisEmulator).forEach(axis => {
+    for (let i = 0; i < this.#axisKeys.length; i++) {
+      const axis = this.#axisKeys[i];
       result[axis] = this.#axisEmulator[axis].getPosition() / 10000;
-    });
+    }
     return result;
   }
 

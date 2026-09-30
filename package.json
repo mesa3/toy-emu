@@ -12,7 +12,8 @@
   },
   "scripts": {
     "release": "npx webpack",
-    "dev": "webpack serve --open dual-sr6.html"
+    "dev": "webpack serve --open dual-sr6.html",
+    "bridge": "node bridge/server.js"
   },
   "keywords": [
     "osr",
@@ -34,6 +35,7 @@
     "webpack-dev-server": "^4.15.2"
   },
   "dependencies": {
-    "three": "^0.127.0"
+    "three": "^0.127.0",
+    "ws": "^8.19.0"
   }
 }
